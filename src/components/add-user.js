@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import PropTypes from "prop-types";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import { ACCESSLEVELS }from "../enums/access-levels";
 import { USERSSTATUS } from "../enums/users-status";
 import { ACTIONTYPES } from "../enums/action-types";
 import values from "lodash/values";
-
+import { addUsers } from "../actions"
 
 class AddUser extends Component {
   constructor(props) {
@@ -33,6 +33,7 @@ class AddUser extends Component {
    status: USERSSTATUS.INVITED,
    actionTypes: [ACTIONTYPES.RESEND, ACTIONTYPES.REVOKEINVITE]
   }
+  this.props.addUsers(formData);
   console.log("Form Data ",formData);
 }
 
@@ -64,4 +65,18 @@ class AddUser extends Component {
 
 }
 
-export default AddUser;
+const mapStateToProps = (state) => {
+  return {
+
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addUsers: (formData) => {
+      dispatch(addUsers(formData));
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddUser);

@@ -1,27 +1,42 @@
-import React from 'react';
+import React from "react";
 import PropTypes from "prop-types";
-import forEach from "lodash/forEach";
+import { connect } from "react-redux";
+import get from "lodash/get";
+import isArray from "lodash/isArray";
 import UserAccess from "./user-access";
 
-const UsersList = ({usersList}) => (
-  <table  className="table table-striped">
-    <thead>
-    <tr>
-      <th>Status</th>
-      <th>User emailId</th>
-      <th>Access</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {_renderList(usersList)}
-  </tbody>
+class UsersList extends React.Component {
 
-  </table>
-);
+  shouldComponentUpdate(nextProps, nextState) {
 
-const _renderList = (usersList) =>  usersList.map((user, index) => (
-    <UserAccess {...user} />
+      return get(nextProps, "usersList",[]).length > 0
+  }
+
+  render(){
+    const {usersList} = this.props;
+
+    return (
+      <table  className="table table-striped">
+        <thead>
+        <tr>
+          <th>Status</th>
+          <th>User emailId</th>
+          <th>Access</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {_renderList(usersList)}
+      </tbody>
+
+      </table>
+    );
+  }
+}
+
+
+const _renderList = (usersList) =>  isArray(usersList) && usersList.map((user, index) => (
+    <UserAccess {...user} key={index}/>
 ));
 
 UsersList.propTypes = {
@@ -30,31 +45,15 @@ UsersList.propTypes = {
 
 UsersList.defaultProps = {
   usersList: [
-    {
-      status: "Invited",
-      emailId: "user1@gmail.com",
-      accessLevel: "Limited",
-      actions: ["resend","revoke invite"]
-    },
-    {
-      status: "Active",
-      emailId: "user2@gmail.com",
-      accessLevel: "Full",
-      actions: ["revoke access"]
-    },
-    {
-      status: "Active",
-      emailId: "user3@gmail.com",
-      accessLevel: "Full",
-      actions: ["revoke access"]
-    } ,
-    {
-      status: "Active",
-      emailId: "user4@gmail.com",
-      accessLevel: "Limited",
-      actions: ["revoke access"]
-    }
+
   ]
 }
+const mapStateToProps = (state) => {
+  return {
+    usersList: get(state, "usersManagement.usersList")
+  };
+};
 
-export default UsersList;
+
+
+export default connect(mapStateToProps, {})(UsersList);

@@ -1,18 +1,17 @@
-import React from 'react';
-import { render } from 'react-dom';
-import Hello from './Hello';
-import AddUser from './components/add-user';
-import UsersList from './components/users-list';
-import './styles/index.css';
+import React from "react";
+import { render } from "react-dom";
+import { Provider } from "react-redux";
+import { Router, browserHistory } from "react-router";
+import configureStore from "./store/configureStore";
+import routes from "./routes";
+import "./styles/index.css";
 
 
-const App = () => (
-  <div className="container">
-    <AddUser />
-    <label>My Team</label><span className="badge badge-pill badge-default">11</span>
-    <UsersList />
+const store = configureStore();
 
-  </div>
+render(
+  <Provider store={store}>
+    <Router history={browserHistory} routes={routes} />
+  </Provider>,
+  document.getElementById("root")
 );
-
-render(<App />, document.getElementById('root'));
